@@ -173,4 +173,34 @@
         }
     ```
 
-其中StringCoding.decode在JDK1.9中不再返回char[]数组，而返回的是 StringCodingde 静态内部类 Result，再将Result中的value和coder赋给String。
+    其中StringCoding.decode在JDK1.9中不再返回char[]数组，而返回的是 StringCodingde 静态内部类 Result，再将Result中的value和coder赋给String。
+
+    - **String(StringBuffer buffer)、String(StringBuilder builder) -- 使用StringBuffer、StringBuilder创建字符串**
+
+    ```
+        public String(StringBuffer buffer) {
+            synchronized(buffer) {
+                this.value = Arrays.copyOf(buffer.getValue(), buffer.length());
+            }
+        }
+        public String(StringBuilder builder) {
+            this.value = Arrays.copyOf(builder.getValue(), builder.length());
+        }
+    ```
+
+    - **一个特殊的保护(protected)类型的构造方法**
+    
+        String中提供了一个protected修饰的构造器：
+
+    ```
+        String(char[] value, boolean share) {
+            // assert share : "unshared not supported";
+            this.value = value;
+        }
+    ```
+
+    该方法与String(char[] value)的区别是：第一，多了一个boolean类型的share参数。这个参数方法中并没有用到，其实**加入这个boolean参数share是为了和String(cahr[] value) 这个构造器区分开来。**第二，这个构造器将传入的字符数组直接赋给了value 。而String(char[] value) 这个构造器将传入的字符数组使用Arrays.copyOf()方法复制了一份。
+
+    > 使用该构造器的优点：性能好。不需要复制数组；节约内存，因为共享同一个数组，所以不需要新建数组空间。
+    
+    之所以这个构造方法被设置为poretected，如果设置为public，就有可能破坏String的不可变性。所以，从安全角度来看，这个构造器也是安全的。
