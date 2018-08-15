@@ -2,6 +2,7 @@
 详情参考：
 
 - [Java 7 源码学习系列（一）——String](http://www.hollischuang.com/archives/99) 
+- [Java中由substring方法引发的内存泄漏](https://blog.csdn.net/diaorenxiang/article/details/39155237)
 
 
     ## 一、 概述
@@ -201,6 +202,91 @@
 
     该方法与String(char[] value)的区别是：第一，多了一个boolean类型的share参数。这个参数方法中并没有用到，其实**加入这个boolean参数share是为了和String(cahr[] value) 这个构造器区分开来。**第二，这个构造器将传入的字符数组直接赋给了value 。而String(char[] value) 这个构造器将传入的字符数组使用Arrays.copyOf()方法复制了一份。
 
-    > 使用该构造器的优点：性能好。不需要复制数组；节约内存，因为共享同一个数组，所以不需要新建数组空间。
+    > 使用该构造器的优点：**性能好**。不需要复制数组；节约内存，因为共享同一个数组，所以不需要新建数组空间。
     
     之所以这个构造方法被设置为poretected，如果设置为public，就有可能破坏String的不可变性。所以，从安全角度来看，这个构造器也是安全的。
+
+    String的一些方法也使用了这种"性能好、节约内存、安全的构造器"，比如replace、concat、valueOf()以及JDK1.6的substring方法(实际上他们使用的是public String(char[], int, int)方法，原理和本方法相同，已经被本方法取代)。
+
+    
+    ### 4.substring
+    
+    substring 方法的作用就是提取某个字符串的子串。但是JDK6的substring 可能会导致内存泄露。先看一下JDK1.6 substring 的源码：
+    ```
+        public String substring(int beginIndex, int endIndex) {
+            if (beginIndex < 0) {
+                throw new StringIndexOutOfBoundsException(beginIndex);
+            }
+            if (endIndex > count) {
+                throw new StringIndexOutOfBoundsException(endIndex);
+            }
+            if (beginIndex > endIndex) {
+                throw new StringIndexOutOfBoundsException(endIndex - beginIndex);
+            }
+            return ((beginIndex == 0) && (endIndex == count)) ? this :
+                new String(offset + beginIndex, endIndex - beginIndex, value); //使用的是和父字符串同一个char数组value
+            }
+
+        // 没有新差创建对象，仍然使用了原字符串对象
+        String(int offset, int count, char value[]) {
+            this.value = value;
+            this.offset = offset;
+            this.count = count;
+        }
+    ```
+
+    由于返回回来的子字符串和原有的父字符串是同一个对象，就可能引发内存泄露：
+
+    ```
+        String str = "abcdefghijklmnopqrst";
+        String sub = str.substring(1, 3) + "";
+        str = null;    
+    ```
+
+    上面代码中，虽然str = nulln，但是sub依然引用了str所引用的对象，导致str 所指向的对象 "abcdefghijklmnopqrst" 无法被回收，进而可能导致内存泄露。
+
+    为了改正这个问题，JDK1.7 之后的 substring 方法进行了修改，下面是JDK1.7的 substring 方法源码：
+    ```
+        public String substring(int beginIndex, int endIndex) {
+            if (beginIndex < 0) {
+                throw new StringIndexOutOfBoundsException(beginIndex);
+            }
+            if (endIndex > value.length) {
+                throw new StringIndexOutOfBoundsException(endIndex);
+            }
+            int subLen = endIndex - beginIndex;
+            if (subLen < 0) {
+                throw new StringIndexOutOfBoundsException(subLen);
+            }
+            return ((beginIndex == 0) && (endIndex == value.length)) ? this
+                    : new String(value, beginIndex, subLen);
+        }
+
+
+    public String(char value[], int offset, int count) {
+        if (offset < 0) {
+            throw new StringIndexOutOfBoundsException(offset);
+        }
+        if (count < 0) {
+            throw new StringIndexOutOfBoundsException(count);
+        }
+        // Note: offset or count might be near -1>>>1.
+        if (offset > value.length - count) {
+            throw new StringIndexOutOfBoundsException(offset + count);
+        }
+        this.value = Arrays.copyOfRange(value, offset, offset+count);
+    }
+
+    public static char[] copyOfRange(char[] original, int from, int to) {
+        int newLength = to - from;
+        if (newLength < 0)
+            throw new IllegalArgumentException(from + " > " + to);
+        char[] copy = new char[newLength];   //是创建了一个新的char数组
+        System.arraycopy(original, from, copy, 0,
+                         Math.min(original.length - from, newLength));
+        return copy;
+    }
+
+    ```
+
+可以发现是去为子字符串创建了一个新的char数组去存储子字符串中的字符。这样子字符串和父字符串也就没有什么必然的联系了，当父字符串的引用失效的时候，GC就会适时的回收父字符串占用的内存空间。
