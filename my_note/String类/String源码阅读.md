@@ -3,6 +3,7 @@
 
 - [Java 7 源码学习系列（一）——String](http://www.hollischuang.com/archives/99) 
 - [Java中由substring方法引发的内存泄漏](https://blog.csdn.net/diaorenxiang/article/details/39155237)
+- [请别再拿“String s = new String("xyz");创建了多少个String实例”来面试了吧](http://rednaxelafx.iteye.com/blog/774673)
 
 
     ## 一、 概述
