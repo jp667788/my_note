@@ -291,7 +291,7 @@
 
     可以发现是去为子字符串创建了一个新的char数组去存储子字符串中的字符。这样子字符串和父字符串也就没有什么必然的联系了，当父字符串的引用失效的时候，GC就会适时的回收父字符串占用的内存空间。
 
-    ###5. String对 '+' 的重载
+    ### 5. String对 '+' 的重载
 
     Java是不支持运算符重载的，String 的 '+' 是 java 中唯一的一个重载运算符。先看下面一段代码 
     ```
@@ -315,7 +315,7 @@
     
     可以看出，String 中对 '+' 的重载其实就是使用StringBuilder 和 toString() 方法进行处理。
 
-    ###6. Stirnrg.valueOf() 和 Integer.toString的区别
+    ### 6. Stirnrg.valueOf() 和 Integer.toString的区别
 
     ```
         1.int i = 5;
@@ -328,7 +328,7 @@
 
     第2行代码其实是String i1 = (new StringBuilder()).append(i).toString()。首先创建了一个StringBuilder 对象，在讲
     
-    ###7. intern() 方法
+    ### 7. intern() 方法
 
     ![](http://pbhc9u1ue.bkt.clouddn.com/intern.png)
 
