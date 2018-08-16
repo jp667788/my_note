@@ -366,4 +366,98 @@
     首先，编译期间，符号引用 str1 和字面量 Hello 会被加入到class文件中的常量池中，在类加载之后(具体时间请参考：[Java 中new String("字面量") 中 "字面量" 是何时进入字符串常量池的?](https://www.zhihu.com/question/55994121))
     但是并不是所有的字面量都会进入字符串常量池，如果字符串已经存在常量池中就不会再加载进来了。
 
-    到了运行时期，执行到 new String("Hello")时，会在Java堆中创建一个字符串对象，这个对象所对应的字符串字面量保存在常量池中，但是 符号引用 Str1 指向的是堆中新创建出来的地址。
+    到了运行时期，执行到 new String("Hello")时，会在Java堆中创建一个字符串对象，这个对象所对应的字符串字面量保存在常量池中，但是 符号引用 Str1 指向的是堆中新创建出来的地址。所以会有以下代码成立：
+
+    ```
+    Stirng s1 = new String("Hello");
+    Stirng s2 = new String("Hello");
+    System.out.println(s1 == s2); // false
+    ```
+
+    因为s1,s2是堆上两个不同对象的地址引用，所以s1 == s2 为false。内存结构图大致如下图（草图）所示：
+    
+    ![](http://pbhc9u1ue.bkt.clouddn.com/String1.jpg)
+
+    > 在不同版本的JDK中，Java堆和字符串常量池之间的关系也是不同的，这里为了方便表述，就画成两个独立的物理区域了。
+    
+    #### new String("Hello")创建了几个对象？
+
+    所以可以很清楚的看到在执行 new String("Hello") 一共创建了两个对象，一个是s1所引用的堆空间中的对象，另一个是在常量池中的对象。
+
+    JVM并没有规定常量池中的对象必须在**编译期**才能放入常量池，运行期也可以放入常量池，String的**intern**方法就是利用了这个特点。
+
+    再来分析一下一开始的代码：
+
+    ```
+    String str1 = "Hello";
+    String str2 = new String("Hello");
+    String str3 = new String("Hello").intern();
+    System.out.println(str1 == str2); // false
+    System.out.println(str1 == str3); // true
+    ```
+
+    此时的内存结构应该是这样的：
+
+    ![](http://pbhc9u1ue.bkt.clouddn.com/String2.jpg)
+
+    分析new String("Hello") 这段代码，如果后面没有执行intern()方法，那么str2,str3都指向的是堆空间中的对象，也就是图中绿色的那片区域。但是由于是两片不同的空间，地址不同，所以此时 str1 == str2 为false，而且str2 == str3 也是false。
+
+    但是现在 str3 执行了 new String("Hello").intern()，intern()方法会将常量池中的引用返回给str3(因为这里做了赋值)，因为前面的str1 已经在常量池中创建了一个"Hello"字面量，所有str3 接受到的intern()返回的引用与str1 一致，所以str1 == str3 为 true成立。
+
+    在新建字符串对象的时候，我们一般使用下面两种方法：
+    - 一种是直接冒号创建：String str = "Hello";
+    - 一种是使用构造器：String str = new String("Hello");
+    
+    不论是上面两种哪种方法，创建字符串对象时都会先检查常量池中是否有该字面量，没有的话就会放入常量池。那么这样的话，intern()是不是就没有用了呢？
+
+    #### intern() 方法的使用
+
+    在前面说 String 对 '+' 重载时说到，String 在使用 '+' 进行字符串拼接时，实质是创建了一个 StringBuilder 对象再调用toString() 方法，但是如果拼接了两个字符串变量，这种拼接之后产生的新的字符串并不在常量池中。
+    ```
+    String s1 = "Hello";
+    String s2 = "World";
+    String s3 = s1 + s2;
+    String s4 = "Hello" + "World";
+    ```
+
+    进行反编译之后
+    ```
+    String s1 = "Hello";
+    String s2 = "World";
+    String s3 = new StringBuilder().append("Hello").append("World").toString();
+    String s4 = "HelloWorld";
+    ```
+
+    究其原因，是因为常量池要保存的是已确定的字面量值。也就是说，对于字符串的拼接，纯字面量和字面量的拼接，会把拼接结果作为常量保存到字符串池。
+
+    如果在字符串拼接中，有一个参数是非字面量，而是一个变量的话，整个拼接操作会被编译成StringBuilder.append，这种情况编译器是无法知道其确定值的。只有在运行期才能确定。
+
+    所以只有运行期才能确定的字符串，就可以使用intern()方法放入常量池，减少字符串的重复创建。
+
+
+    前面提到了new String("Hello")，也会把Hello放入常量池中，那new String("Hello").intern() 是不是就多余了呢。其实不然，intern() 方法有两个作用，一个是讲字符串放入常量池，另一个是**将常量引用返回**。
+
+    也就是这个值是有返回值的，返回的就是常量的引用。如果将下面的代码
+
+    ```
+    String str1 = "Hello";
+    String str2 = new String("Hello");
+    String str3 = new String("Hello").intern();
+    System.out.println(str1 == str2); // false
+    System.out.println(str1 == str3); // true
+    ```
+
+    修改为：
+
+    ```
+        String str1 = "Hello";
+        String str2 = new String("Hello");
+        String str3 = new String("Hello");
+        // 使用新的变量接受返回的引用
+        String str4 = str3.intern();
+        System.out.println(str1 == str2); // false
+        System.out.println(str1 == str3); // false（这里true 不再成立）
+        System.out.println(str1 == str4); // true
+    ```
+
+    不过这种写法的确没有什么意义，但是对于理解intern()方法和常量池是很有帮助的。
