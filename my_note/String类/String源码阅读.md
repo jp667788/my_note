@@ -289,4 +289,81 @@
 
     ```
 
-可以发现是去为子字符串创建了一个新的char数组去存储子字符串中的字符。这样子字符串和父字符串也就没有什么必然的联系了，当父字符串的引用失效的时候，GC就会适时的回收父字符串占用的内存空间。
+    可以发现是去为子字符串创建了一个新的char数组去存储子字符串中的字符。这样子字符串和父字符串也就没有什么必然的联系了，当父字符串的引用失效的时候，GC就会适时的回收父字符串占用的内存空间。
+
+    ###5. String对 '+' 的重载
+
+    Java是不支持运算符重载的，String 的 '+' 是 java 中唯一的一个重载运算符。先看下面一段代码 
+    ```
+    public class TestA{
+      public static void main(String[] args){
+        String str1 = "Hello";
+        String str2 = str1 + "World";
+      }
+    }
+    ```
+    
+    反编译上面的代码：
+
+    ```
+    public class TestA{
+        public static void main(final String[] array) {
+            new StringBuilder().append("Hello").append("World").toString();
+        }
+    }
+    ```
+    
+    可以看出，String 中对 '+' 的重载其实就是使用StringBuilder 和 toString() 方法进行处理。
+
+    ###6. Stirnrg.valueOf() 和 Integer.toString的区别
+
+    ```
+        1.int i = 5;
+        2.String i1 = "" + i;
+        3.String i2 = String.valueOf(i);
+        4.String i3 = Integer.toString(i);
+    ```
+
+    第3行和第4行没有什么区别，因为String.valueOf(i) 也是调用了 Integer.toString()方法来实现的。
+
+    第2行代码其实是String i1 = (new StringBuilder()).append(i).toString()。首先创建了一个StringBuilder 对象，在讲
+    
+    ###7. intern() 方法
+
+    ![](http://pbhc9u1ue.bkt.clouddn.com/intern.png)
+
+    intern() 方法有两个作用：
+
+    - 第一，如果常量池中没有该字符串的字面量，将字符串字面量放入常量池。
+    - 第二，返回这个常量的引用。
+
+    首先看下面一段代码：
+    ```
+        String str1 = "Hello";
+        String str2 = new String("Hello");
+        String str3 = new String("Hello").intern();
+        System.out.println(str1 == str2); // false
+        System.out.println(str1 == str3); // true
+    ```
+
+    首先需要了解几个关键词：
+    - 运行时常量池
+        JVM 中有几种常量池：
+        - class文件中的常量池
+            
+            > 主要用于存放**字面量**和**符号引用**，这部分内容会在类加载之后进入方法区与运行时常量池存放。
+        - 方法区中的运行时常量池
+            > 运行时常量池除了存放calss文件常量池的内容外，与class常量池不同的是，运行时茶凉吃具有动态性，在运行期也可能将新的常量放入池中。
+        
+        JVM为了减少JVM中创建的字符串数量，字符串类维护了一个常量池，主要用来存储编译期生成的各种字面量和符号引用。
+    - 字面量
+        > 如文本字符串、声明为final 的常量值等;
+    - 符号引用
+        >1.类和接口的全限定名；2.字段名称和描述符；3.方法名称和描述符。
+    
+    对于上面的代码产生的结果，先分析 new String("Hello") 创建对象的过程
+
+    首先，编译期间，符号引用 str1 和字面量 Hello 会被加入到class文件中的常量池中，在类加载之后(具体时间请参考：[Java 中new String("字面量") 中 "字面量" 是何时进入字符串常量池的?](https://www.zhihu.com/question/55994121))
+    但是并不是所有的字面量都会进入字符串常量池，如果字符串已经存在常量池中就不会再加载进来了。
+
+    到了运行时期，执行到 new String("Hello")时，会在Java堆中创建一个字符串对象，这个对象所对应的字符串字面量保存在常量池中，但是 符号引用 Str1 指向的是堆中新创建出来的地址。
