@@ -2,6 +2,5 @@
 title: Mysql Note
 ---
 
-## Mysql
-
-
+## Mysql 结构组成
+##
