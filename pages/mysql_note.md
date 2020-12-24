@@ -3,4 +3,3 @@ title: Mysql Note
 ---
 
 ## Mysql
-##
