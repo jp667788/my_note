@@ -1,0 +1,123 @@
+{
+  "main": {
+    "id": "39e92c0ff64dfce1",
+    "type": "split",
+    "children": [
+      {
+        "id": "32698bc689022b68",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "Spring/Spring 依赖查找.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "904ad10cc9e519c6",
+    "type": "split",
+    "children": [
+      {
+        "id": "5e350917a8593f10",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0d9cdb7a0c8fa4e7",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "857e71ce8b4c283a",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "redis",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "1e04dfcf3f231064",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "ec142a8783e0707d",
+    "type": "split",
+    "children": [
+      {
+        "id": "6b0bb672f3cc6ce3",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c16a2de1fa3e7ffd",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Spring/Spring 依赖查找.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "b635a34cec921167",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "32698bc689022b68",
+  "lastOpenFiles": [
+    "1面试题/Spring Boot.md",
+    "1面试题/Spring.md",
+    "1面试题/Kafka.md",
+    "Spring/SpringBoot.md",
+    "Servlet  & Tomcat/Tomcat 类加载器.md",
+    "中间件/redis/Redis 面试题.md",
+    "中间件/redis/Redis 集群.md",
+    "Mysql/幻读与间隙锁.md",
+    "JVM总结/JVM 类加载.md",
+    "Java 并发编程/Thread.md"
+  ]
+}

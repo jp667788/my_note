@@ -1,0 +1,22 @@
+### 常见参数
+- 生产者：
+	- ack
+		- 1
+			- 生产者发送消息后，只要分区的 leader 副本成功写入消息，就会收到服务端的成功响应
+		- 0
+			- 生产者发送消息后，不需要等待任何服务端的响应
+			- 吞吐量最高
+		- -1 / all
+			- 生产者发送消息后，需要等带 ISR 中的所有副本都成功写入消息
+			- 但是 ISR 只有 leader 副本的话就退化成了 acks=1 的情况
+	- min.insync.replicas
+	- max.request.size
+		- 限制生产者客户端能发送的消息最大值，默认 1MB
+	- retries
+		- 重试次数
+	- retrey.backff.ms
+		- 设定 两次重试之间的时间间隔
+		- 100 m
+- 消费者
+	- bootstrap.servers
+	- group.id:

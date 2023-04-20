@@ -1,0 +1,19 @@
+{
+  "spellcheck": false,
+  "showFrontmatter": true,
+  "promptDelete": false,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "current",
+  "attachmentFolderPath": "./",
+  "foldIndent": true,
+  "foldHeading": true,
+  "showLineNumber": false,
+  "spellcheckDictionary": [
+    "ServiceResponse",
+    "ServiceRequest",
+    "Servlet",
+    "init",
+    "Servlet"
+  ],
+  "fileSortOrder": "byModifiedTime"
+}

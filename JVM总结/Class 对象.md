@@ -1,0 +1,5 @@
+- magic number
+- minor version
+- major version
+- constant_pool_count 
+	- 长度

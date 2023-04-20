@@ -19,27 +19,29 @@
     
     进入java.lang.String下，可以看到String类如下定义：
 
-    `   public final class String implements java.io.Serializable, Comparable<String>, CharSequence`
+    ```java
+		public final class String implements java.io.Serializable, Comparable<String>, CharSequence    
+	```
 
     可以清楚的看到，String类被声明为final类，且实现了Serializable、Comparable、CharSequence 接口。其中CharSequencetigon 接口中提供了length()、chatAt() 等方法。
 
     ### 2. 属性
-    ```
-        private final char value[];（JDK 1.8）    
-        private final byte value[];（JDK 1.9）
-    ```
+	```java
+		private final char value[];（JDK 1.8）    
+		private final byte value[];（JDK 1.9）
+	```
 
     value[]数组用于存储String中的字符串内容。是一个被声明成final的字符数组，在JDK1.9以后，value[]被声明为字节数组。因为是被final声明的，所以String一旦被初始化之后，就允许再改变。
 
-    ```
+    ``` java
         private int hash;
     ```
 
     hash 缓存了字符串的hashCode值，默认为0
 
-    ```
-    private static final long serialVersionUID = -6849794470754667710L;
-    private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];
+    ```java
+    	private static final long serialVersionUID = -6849794470754667710L;
+    	private static final ObjectStreamField[] serialPersistentFields = new ObjectStreamField[0];
     ```
 
     String实现了 Serializable 接口，所以支持序列化和反序列化。
@@ -48,8 +50,8 @@
 
     JDK1.9中新增了一个coder属性：
     
-    ```
-    private final byte coder;
+    ```java
+	    private final byte coder;
     ```
     >   此属性为用于编码字节的编码的标识符，分为 LATIN1 与 UTF16，被虚拟机信任，不可变，不重写。
        
@@ -58,17 +60,17 @@
     
     - **String() -- 空构造**
 
-        ```
+	``` java
         public String() {       
-        this.value = "".value;
+        	this.value = "".value;
         }
-        ```
+	```
     
-        可以看到调用空构造时，会创建一个空字符对象。
+	可以看到调用空构造时，会创建一个空字符对象。
 
     - **String(String original) -- 使用字符串创建一个字符串对象**
 
-    ```
+    ```java
         public String(String original) {
             this.value = original.value;
             this.hash = original.hash;
@@ -77,7 +79,7 @@
 
     与直接用""双引号创建字符串不同的是，使用new String("")创建字符串时，每个创建出来的对象都是存储在堆上的新对象，而使用""双引号创建出来的字符串从常量池中获取。所以出现如下代码中的情况：
 
-    ```
+    ```java
         public class TestStringCons{
             public static void main(String[] args){
                 String abc = "abc";
@@ -93,7 +95,7 @@
 
     -  **String（Char[] value[]），String(char value[], int offset, int count)  -- 使用字符数组创建对象**
     
-    ```
+    ```java
         public String(char value[]) {
             this.value = Arrays.copyOf(value, value.length);
         }      
@@ -123,7 +125,7 @@
     
     - **String(byte bytes[], int offset, int length, Charset charset)** -- 使用字节数组创建对象
     
-    ```
+    ```java
         public String(byte bytes[], int offset, int length, Charset charset) {
             if (charset == null)
                 throw new NullPointerException("charset");
@@ -138,7 +140,7 @@
     
     如果我们在使用byte[]构造String的时候，使用的是下面这四种构造方法(带有charsetName或者charset参数)的一种的话，那么就会使用StringCoding.decode方法进行解码，使用的解码的字符集就是我们指定的charsetName或者charset。 我们在使用byte[]构造String的时候，如果没有指明解码使用的字符集的话，那么StringCoding的decode方法首先调用系统的默认编码格式，如果没有指定编码格式则默认使用ISO-8859-1编码格式进行编码操作。主要体现代码如下：
 
-    ```
+    ```java
           static char[] decode(byte[] ba, int off, int len) {
             String csn = Charset.defaultCharset().name();
             try {
@@ -163,7 +165,7 @@
     ```
 
     在JDK1.9中，这个构造方法和StringCoding.decode方法发生一些改变：
-    ```
+    ```java
          public String(byte bytes[], int offset, int length, Charset charset) {
             if (charset == null)
                 throw new NullPointerException("charset");
@@ -179,7 +181,7 @@
 
     - **String(StringBuffer buffer)、String(StringBuilder builder) -- 使用StringBuffer、StringBuilder创建字符串**
 
-    ```
+    ```java
         public String(StringBuffer buffer) {
             synchronized(buffer) {
                 this.value = Arrays.copyOf(buffer.getValue(), buffer.length());
@@ -194,7 +196,7 @@
     
         String中提供了一个protected修饰的构造器：
 
-    ```
+    ```java
         String(char[] value, boolean share) {
             // assert share : "unshared not supported";
             this.value = value;
@@ -213,7 +215,7 @@
     ### 4.substring
     
     substring 方法的作用就是提取某个字符串的子串。但是JDK6的substring 可能会导致内存泄露。先看一下JDK1.6 substring 的源码：
-    ```
+    ```java
         public String substring(int beginIndex, int endIndex) {
             if (beginIndex < 0) {
                 throw new StringIndexOutOfBoundsException(beginIndex);
@@ -238,7 +240,7 @@
 
     由于返回回来的子字符串和原有的父字符串是同一个对象，就可能引发内存泄露：
 
-    ```
+    ```java
         String str = "abcdefghijklmnopqrst";
         String sub = str.substring(1, 3) + "";
         str = null;    
@@ -247,7 +249,7 @@
     上面代码中，虽然str = nulln，但是sub依然引用了str所引用的对象，导致str 所指向的对象 "abcdefghijklmnopqrst" 无法被回收，进而可能导致内存泄露。
 
     为了改正这个问题，JDK1.7 之后的 substring 方法进行了修改，下面是JDK1.7的 substring 方法源码：
-    ```
+    ```java
         public String substring(int beginIndex, int endIndex) {
             if (beginIndex < 0) {
                 throw new StringIndexOutOfBoundsException(beginIndex);
@@ -295,7 +297,7 @@
     ### 5. String对 '+' 的重载
 
     Java是不支持运算符重载的，String 的 '+' 是 java 中唯一的一个重载运算符。先看下面一段代码 
-    ```
+    ```java
     public class TestA{
       public static void main(String[] args){
         String str1 = "Hello";
@@ -306,7 +308,7 @@
     
     反编译上面的代码：
 
-    ```
+    ```java
     public class TestA{
         public static void main(final String[] array) {
             new StringBuilder().append("Hello").append("World").toString();
@@ -318,7 +320,7 @@
 
     ### 6. Stirnrg.valueOf() 和 Integer.toString的区别
 
-    ```
+    ```java
         1.int i = 5;
         2.String i1 = "" + i;
         3.String i2 = String.valueOf(i);
@@ -350,17 +352,18 @@
     首先需要了解几个关键词：
     - 运行时常量池
         JVM 中有几种常量池：
-        - class文件中的常量池
-            
-            > 主要用于存放**字面量**和**符号引用**，这部分内容会在类加载之后进入方法区与运行时常量池存放。
+        - class文件中的常量池	
+			- 主要用于存放**字面量**和**符号引用**，这部分内容会在类加载之后进入方法区与运行时常量池存放。
         - 方法区中的运行时常量池
-            > 运行时常量池除了存放calss文件常量池的内容外，与class常量池不同的是，运行时茶凉吃具有动态性，在运行期也可能将新的常量放入池中。
+			- 运行时常量池除了存放calss文件常量池的内容外，与class常量池不同的是，运行时常量池具有动态性，在运行期也可能将新的常量放入池中。
         
         JVM为了减少JVM中创建的字符串数量，字符串类维护了一个常量池，主要用来存储编译期生成的各种字面量和符号引用。
     - 字面量
-        > 如文本字符串、声明为final 的常量值等;
+		- 如文本字符串、声明为final 的常量值等;
     - 符号引用
-        >1.类和接口的全限定名；2.字段名称和描述符；3.方法名称和描述符。
+		- 1.类和接口的全限定名；
+		- 2.字段名称和描述符；
+		- 3.方法名称和描述符。
     
     对于上面的代码产生的结果，先分析 new String("Hello") 创建对象的过程
 
@@ -369,10 +372,10 @@
 
     到了运行时期，执行到 new String("Hello")时，会在Java堆中创建一个字符串对象，这个对象所对应的字符串字面量保存在常量池中，但是 符号引用 Str1 指向的是堆中新创建出来的地址。所以会有以下代码成立：
 
-    ```
-    Stirng s1 = new String("Hello");
-    Stirng s2 = new String("Hello");
-    System.out.println(s1 == s2); // false
+    ```java
+		Stirng s1 = new String("Hello");
+		Stirng s2 = new String("Hello");
+		System.out.println(s1 == s2); // false
     ```
 
     因为s1,s2是堆上两个不同对象的地址引用，所以s1 == s2 为false。内存结构图大致如下图（草图）所示：
@@ -389,7 +392,7 @@
 
     再来分析一下一开始的代码：
 
-    ```
+    ```java
     String str1 = "Hello";
     String str2 = new String("Hello");
     String str3 = new String("Hello").intern();
@@ -414,7 +417,7 @@
     #### intern() 方法的使用
 
     在前面说 String 对 '+' 重载时说到，String 在使用 '+' 进行字符串拼接时，实质是创建了一个 StringBuilder 对象再调用toString() 方法，但是如果拼接了两个字符串变量，这种拼接之后产生的新的字符串并不在常量池中。
-    ```
+    ```java
     String s1 = "Hello";
     String s2 = "World";
     String s3 = s1 + s2;
@@ -422,7 +425,7 @@
     ```
 
     进行反编译之后
-    ```
+    ```java
     String s1 = "Hello";
     String s2 = "World";
     String s3 = new StringBuilder().append("Hello").append("World").toString();
@@ -440,17 +443,17 @@
 
     也就是这个值是有返回值的，返回的就是常量的引用。如果将下面的代码
 
-    ```
-    String str1 = "Hello";
-    String str2 = new String("Hello");
-    String str3 = new String("Hello").intern();
-    System.out.println(str1 == str2); // false
-    System.out.println(str1 == str3); // true
+    ```java
+		String str1 = "Hello";
+		String str2 = new String("Hello");
+		String str3 = new String("Hello").intern();
+		System.out.println(str1 == str2); // false
+		System.out.println(str1 == str3); // true
     ```
 
     修改为：
 
-    ```
+    ```java
         String str1 = "Hello";
         String str2 = new String("Hello");
         String str3 = new String("Hello");

@@ -1,0 +1,208 @@
+
+- **并发编程**
+	- volatile [[Java 内存模型#volatile]]
+		- 特点
+			- 保证可见性
+			- 保证不会指令重排序，通过插入内存屏障保证指令执行顺序
+			- 不能保证原子性
+			- volatile 类型的 64 位的 long型和 double 型变量，对该变量的读/写具有原子性。
+			- volatile 可以用在双重检锁的单例模式中，比 synchronized 性能更好。
+			- volatile 可以用在检查某个状态标记以判断是否退出循环
+	- synchornized [[Java 内存模型#synchronized]]
+		- volatile 与 synchornized 对比
+			- volatile 只能修饰实例变量和类变量，synchronized 可以修饰方法和代码块。
+			- volatile 不保证原子性，而 synchronized 保证原子性
+			- volatile 不会造成阻塞，而 synchronized 可能会造成阻塞
+			- volatile 轻量级锁，synchronized 重量级锁
+			- volatile 和 synchronized 都保证了可见性和有序性。
+	- Java 内存模型 [[Java 内存模型]]
+		- 概述
+			- 为什么需要
+				- 屏蔽各种硬件和操作系统的内存访问差异
+				- 本身是一种抽象的概念，实际上并不存在，它描述的是一组规则或规范，通过这组规范定义了程序中各个变量（包括实例字段，静态字段和构成数组对象的元素）的访问方式。
+			- 是什么
+				- 定义程序中各种变量的访问规则
+				- 把变量值存储到内存的底层细节
+				- 从内存中取出变量值的底层细节
+		- 主内存
+			- Java堆中对象实例数据部分
+			- 对应于物理硬件的内存
+		- 工作内存
+			- Java栈中的部分区域
+			- 优先存储于寄存器和高速缓存
+		- 规范
+			- 所有变量存储在主内存
+			- 主内存是虚拟机内存的一部分
+			- 每条线程有自己的工作内存
+			- 线程的工作内存保存变量的主内存副本
+			- 线程对变量的操作必须在工作内存中进行
+			- 不同线程之间无法直接访问对方工作内存中的变量
+			- 线程间变量值的传递均需要通过主内存来完成
+		- 三大特性
+			- 可见性（当一个线程修改了共享变量的值时，其他线程能够立即得知这个修改）
+			- 原子性
+			- 有序性（变量赋值操作的顺序与程序代码中的执行顺序一致）
+	- ThreadLocal [[ThreadLocal]]
+		- 使用场景
+			- 变量线程间隔离，变量获取成本比较高
+		- 缺点
+			- 线程池会重用固定的几个线程，一旦线程重用，那么很可能首次从 ThreadLocal 获取的值是之前其他用户的请求遗留的值。
+			- 必须回收自定义的ThreadLocal变量，尽量在代理中使用try-finally块进行回收。
+		- 原理
+			- [[ThreadLocal#实现原理]]
+	- 线程池
+		- 优点
+			- 降低资源消耗，重复利用线程
+			- 提高响应速度，任务可以不需要等到线程创建就能立即执行
+			- 提高线程的可管理性，线程池统一分配、调优、监控。
+		- 核心参数
+			- maximumPoolSize 最大线程数
+			- corePoolSize：核心线程数
+			- keepAliveTime：线程活动保持时间
+			- runnableTaskQueue：任务队列
+			- RejectedExecutionHandler 拒绝策略
+		- 执行流程
+			- 提交任务，判断线程数是否大于核心线程数
+			- 小于 corePoolSize 则创建新的线程执行，大于则进入阻塞队列等待
+			- 当阻塞队列满了之后，会继续创建线程直到线程数达到 maxmumPoolSize。任务处理完成，超过核心线程数的线程会在 keepAliveTime 后被销毁
+			- 如果线程数已达到 maxmumPoolSize，阻塞队列也满了，则执行拒绝策略 RejectedExecutionHandler
+		- 线程池中的阻塞队列
+			- ArrayBlockingQueue
+				- 数组结构阻塞队列。FIFO 原则
+				- 队列满时，阻塞插入操作。队列空时，阻塞pop操作
+				- 默认不保证线程公平访问
+				- 公平访问队列：按照阻塞的先后顺序访问队列，即先阻塞的线程先访问队列
+				- 公平性会降低吞吐量。
+				- ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/note/2021-09-04-640.png)
+			- LinkedBlockingQueue
+				- 链表实现的阻塞队列
+				- LinkedBlockingQueue 具有单链表和有界阻塞队列的功能
+				- 吞吐量通常要高于 ArrayBlockingQueue
+				- Executors.newFixedThreadPool()  使用了此队列
+				- 默认和最大长度为Integer.MAX_VALUE，相当于无界(值非常大：2^31-1)
+				- ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/note/2021-09-04-641.png)
+			- SynchronousQueue
+				- 不存储元素的阻塞队列
+				- 每个插入操作必须等到另一个线程调用移除操作，否则插入操作阻塞
+				- 吞吐量通常要高于 LinkedBlockingQueue
+				- Executors.newCachedThreadPool 使用这个队列
+				- 负责把生产者产生的数据传递给消费者线程
+				- 本身不存储数据
+				- put操作必须等待一个take操作完成
+				- 适合传递性场景
+				- 性能高于ArrayBlockingQueue 和 LinkedBlockingQueue
+				- ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/note/2021-09-04-642.png)
+			- PriorityBlockingQueue
+				- 具有优先级的队列
+				- 无线阻塞队列
+				- PriorityBlockQueue = PriorityQueue + BlockingQueue
+				- 支持对元素排序，元素默认自然排序
+				- 可以自定义CompareTo()方法来指定元素排序规则
+				- 可以通过构造函数构造参数Comparator来对元素进行排序
+				- ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/note/2021-09-04-643.png)
+		- 线程数指定多少合适
+			- CPU 密集型
+				- 线程数 = CPU核数 + 1
+				- 当线程因为偶尔的内存页失效或其他原因导致阻塞时，这个额外的线程可以顶上，从而保证 CPU 的利用率
+			- IO  密集型
+				- CPU 核数 * [ 1 +（I/O 耗时 / CPU 耗时）]
+		- 拒绝策略
+			- ThreadPoolExecutor 提供的四种策略
+				- CallerRunsPolicy：提交任务的线程自己去执行该任务
+				- AbortPolicy：默认拒绝策略，会 throws RejectedExecutionException
+				- DiscardPolicy：直接丢弃任务，没有任何异常抛出
+				- DiscardOldestPolicy：把最早进入工作队列的任务丢弃，然后把新任务加入到工作队列
+				- 自定义实现 RejectedExecutionHandler 接口
+		- 线程池的生命周期
+			- 生命周期
+				- RUNNING：接受新的任务
+				- SHUTDOWN：不接受新的任务，队列中的任务会执行
+				- STOP：不接受新的任务，不处理队列中的任务，同时中断正在执行的任务
+				- TIDYING：所有任务处理完成，有效的线程数是0
+				- TERMINATED：terminated() 方法执行完毕
+			- 生命周期状态对应的方法
+				- ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/note/2021-09-04-644.png)
+		- Java 提供的线程池种类
+			- newCachedThreadPool
+				- 适合处理大量短时间任务
+				- 会缓存线程并重用
+				- 线程超过 60s 会被移除
+				- 长时间闲置时，不会消耗太多资源
+			- newFixedThreadPool(int nThreads)
+			- newSingleThreadExecutor()
+				- 工作线程数目被限制为 1
+				- 保证了所有任务的都是被顺序执行
+				- 不允许使用者改动线程池实例，因此可以避免其改变线程数目
+			- newSingleThreadScheduledExecutor() & newScheduledThreadPool(int corePoolSize)
+				- 创建的是个ScheduledExecutorService
+				- 可以进行定时或周期性的工作调度
+			- newWorkStealingPool(int parallelism)
+				- Java 8 加入
+				- 其内部会构建 ForkJoinPool，利用Work-Stealing算法，并行地处理任务，不保证处理顺序	
+		- 终止线程
+			- shutdown()
+				- 会拒绝接受新的任务
+				- 会等待线程池中正在执行的任务
+				- 已经进入阻塞队列的任务都执行完之后才最终关闭线程池
+			- shutdownNow()
+				- 拒绝接收新的任务
+				- 同时还会中断线程池中正在执行的任务
+				- 已经进入阻塞队列的任务也被剥夺了执行的机会
+				- 被剥夺执行机会的任务会作为 shutdownNow() 方法的返回值返回
+		- 如何监控线程池
+			- getPoolSize()：获取线程池的线程数量
+			- getActiveCount()：获取活跃的线程数
+			- getCompletedTaskCount()：获取线程池在运行过程中已完成的任务数量
+			- getQueue().size()：获取队列中还有多少积压任务
+	- CAS
+		- 特点
+			- Compare And Swap 比较并交换
+			- 原子性更新值，保证线程安全
+		- 底层代码
+			- 需要三个变量，变量当前值（V），旧的预期值（A），准备设置的新值（B）。
+		- 执行条件
+			- 仅当 V=A时，才会把V更新成 A。
+		- 实现原理
+			- 调用  sun.misc.Unsafe 类中的 CAS 方法，
+		- CAS 的问题
+			- 频繁自旋；（因为do...while，如果比较不成功，会一直循环）
+			- 只能保证一个变量的原子操作
+			- ABA 问题
+				- 现象
+					- 如果一个值从 A->B->A ，比较相等，其实已经发生了 变化。
+				- 解决办法
+					- 使用版本号， A->B->A 就会变成 1A->2B->3A。
+					- JDK 1.5 后，提供了 **AtomicStampedReference** 。这个类的compareAndSet 方法的作用是首先检查当前引用是否等于预期引用，并且检查当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值。
+	- 并发容器 
+		- List
+			- CopyOnWriteArrayList
+		- Map
+			- ConcurrentHashMap
+			- ConcurrentSkipListMap
+		- Set
+			- ConcurrentSkipListSet
+			- CopyOnWriteArraySet
+		- Queue
+			- BlockingDeQueue
+				- LinkedBlockingDeQueue
+			- BlockingQueue
+			- ConcurrentLinkedQueue
+			- ConcurrentLinkedDeQueue
+- [[Mysql]]
+
+
+
+
+
+					
+
+
+- 分布式
+	- 分布式、微服务区别？
+		- 分布式是部署层面，微服务是系统架构层面
+		- 通俗来说，假设去大饭店吃饭就是一个完整的业务的话， 饭店的厨师、洗碗阿姨、服务员就是分布式； 厨师、洗碗阿姨和服务员都不止一个人，这就是集群； 分布式就是微服务的一种表现形式，分布式是部署层面，微服务是设计层面;
+		- 再说的生动一点就是：饭店需要烧菜的，洗碗的和端菜的，这些是不同的服务（微服务）；这些服务由不同的人（服务器）来干，就是分布式（不同服务在不同服务器上）；而厨师和洗碗工服务员有多个就是多个服务器在实现单一的服务（就是集群）。分布式是为了服务之间互不影响，而集群是为了请求分发，降低一个人（或者说服务器）的工作压
+
+- Spring
+	- 常用注解
+		- @PostConstruct
