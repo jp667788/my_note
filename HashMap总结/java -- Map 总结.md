@@ -8,7 +8,7 @@
 
     java的集合框架中，Map也是一个非常重要和非常常用的数据结构之一。与List不同的是，Map并没有继承 Collection 接口，而是一个独立的接口。下图是Map的继承体系图：
 
-    ![](http://pbhc9u1ue.bkt.clouddn.com/map继承体系.png)
+    ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-04-21-110910.png)
 
     实现了Map接口的主要的几个实现类有下面几个：
 
