@@ -13,50 +13,25 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Mysql/Mysql 主从同步.md",
+                "file": "AWS 认证/14. AWS Lambda.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "8fc81328fcc65949",
+            "id": "4700346d10590f52",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "中间件/redis/Redis 缓存一致性.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "dddb5f798bc8ba84",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "消息队列/消息丢失 & 消息重复 & 消息积压.md",
-                "mode": "preview",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "07515fc98b73f0d7",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "项目场景/接口幂等性.md",
+                "file": "AWS 认证/3. AWS EC2.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -75,7 +50,7 @@
             "state": {
               "type": "file-explorer",
               "state": {
-                "sortOrder": "byModifiedTime"
+                "sortOrder": "alphabetical"
               }
             }
           },
@@ -130,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "中间件/redis/Redis 缓存一致性.md",
+                "file": "AWS 认证/14. AWS Lambda.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -177,39 +152,40 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "8fc81328fcc65949",
+  "active": "3875eac8d169fc59",
   "lastOpenFiles": [
-    "中间件/redis/Redis 过期策略.md",
-    "中间件/redis/Redis 缓存设计.md",
-    "中间件/redis/Redis 数据结构.md",
-    "中间件/redis/Redis 哨兵 Sentinel.md",
-    "中间件/redis/Redis 主从同步.md",
-    "中间件/redis/数据结构.md",
-    "中间件/redis/Redis 面试题.md",
-    "中间件/redis/Redis 集群.md",
-    "中间件/kafka/未命名.md",
-    "消息队列/1. 消息模型.md",
-    "1面试题/Kafka.md",
-    "AWS 认证/AWS 认证相关.md",
+    "AWS 认证/13. AWS SNS.md",
+    "AWS 认证/12. AWS Monitoring.md",
+    "AWS 认证/11. AWS CloudFormation.md",
+    "AWS 认证/10.  AWS Beanstalk.md",
+    "AWS 认证/9. AWS ECS.md",
+    "AWS 认证/8. AWS CloudFont.md",
+    "AWS 认证/7. AWS SDK.md",
+    "AWS 认证/14. AWS Lambda.md",
+    "AWS 认证/4. AWS ELB & ASG.md",
+    "AWS 认证/6. AWS S3.md",
+    "AWS 认证/3. AWS EC2.md",
+    "AWS 认证/2. AWS IAM.md",
+    "AWS 认证/1. AWS 概述.md",
+    "Java 并发编程/AQS.md",
+    "Java 并发编程/锁优化.md",
+    "Java 并发编程/线程池.md",
+    "Java 并发编程/总览.md",
+    "Java 并发编程/ThreadLocal.md",
+    "Java 并发编程/Thread.md",
+    "Java 并发编程/Synchronized.md",
+    "Java 并发编程/Java 内存模型.md",
+    "Spring Cloud/Fegin.md",
+    "1面试题/SpringCloud.md",
+    "1面试题/Spring.md",
+    "1面试题/Spring Boot.md",
     "Mysql/Mysql 主从同步.md",
+    "Mysql/Pasted image 20210829162914.png",
     "AWS 认证",
-    "Mysql/幻读与间隙锁.md",
     "Mysql/Pasted image 20211121180117.png",
     "Mysql/Pasted image 20220405181823.png",
-    "HashMap总结/java -- Map 总结.md",
-    "项目场景/接口幂等性.md",
-    "消息队列/消息丢失 & 消息重复 & 消息积压.md",
     "项目场景",
     "Servlet  & Tomcat/Pasted image 20220112211247.png",
-    "Servlet  & Tomcat/Tomcat 非阻塞IO.md",
-    "Servlet  & Tomcat/Pasted image 20220112211243.png",
-    "Servlet  & Tomcat/Tomcat 总体架构.md",
-    "题目.md",
-    "Spring/Spring 依赖查找.md",
-    "1面试题/Spring Boot.md",
-    "1面试题/Spring.md",
-    "Spring/SpringBoot.md",
-    "Servlet  & Tomcat/Tomcat 类加载器.md",
-    "JVM总结/JVM 类加载.md"
+    "Servlet  & Tomcat/Pasted image 20220112211243.png"
   ]
 }
