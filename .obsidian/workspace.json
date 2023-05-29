@@ -8,30 +8,43 @@
         "type": "tabs",
         "children": [
           {
-            "id": "3875eac8d169fc59",
+            "id": "ac7dd5f118e1b43c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AWS 认证/14. AWS Lambda.md",
+                "file": "AWS 认证/4. AWS ELB & ASG.md",
                 "mode": "source",
                 "source": false
               }
             }
           },
           {
-            "id": "4700346d10590f52",
+            "id": "4dfe3520bd672a0c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "AWS 认证/3. AWS EC2.md",
+                "file": "AWS 认证/17. CICD.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "b182bf6b0b69f2e8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS 认证/12. AWS Monitoring.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -89,7 +102,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "ec142a8783e0707d",
@@ -105,7 +118,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "AWS 认证/14. AWS Lambda.md",
+                "file": "AWS 认证/12. AWS Monitoring.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -152,33 +165,36 @@
       "markdown-importer:打开 Markdown 格式转换器": false
     }
   },
-  "active": "3875eac8d169fc59",
+  "active": "0d9cdb7a0c8fa4e7",
   "lastOpenFiles": [
-    "AWS 认证/13. AWS SNS.md",
-    "AWS 认证/12. AWS Monitoring.md",
-    "AWS 认证/11. AWS CloudFormation.md",
     "AWS 认证/10.  AWS Beanstalk.md",
+    "AWS 认证/17. CICD.md",
+    "AWS 认证/18. SAM & CDK.md",
+    "AWS 认证/21. 安全.md",
+    "AWS 认证/11. AWS CloudFormation.md",
+    "AWS 认证/13. AWS SQS & SNS & Kinesis.md",
+    "AWS 认证/19. Cognito.md",
+    "AWS 认证/15. DynamoDB.md",
     "AWS 认证/9. AWS ECS.md",
-    "AWS 认证/8. AWS CloudFont.md",
-    "AWS 认证/7. AWS SDK.md",
-    "AWS 认证/14. AWS Lambda.md",
-    "AWS 认证/4. AWS ELB & ASG.md",
     "AWS 认证/6. AWS S3.md",
+    "AWS 认证/8. AWS CloudFont.md",
     "AWS 认证/3. AWS EC2.md",
+    "AWS 认证/22. AWS 其他服务.md",
     "AWS 认证/2. AWS IAM.md",
+    "AWS 认证/16. AWS GateWay.md",
+    "AWS 认证/12. AWS Monitoring.md",
+    "AWS 认证/0. 考点总结.md",
+    "AWS 认证/5. RDS & Aurora & ElasticCache.md",
+    "AWS 认证/4. AWS ELB & ASG.md",
+    "AWS 认证/14. AWS Lambda.md",
     "AWS 认证/1. AWS 概述.md",
-    "Java 并发编程/AQS.md",
-    "Java 并发编程/锁优化.md",
-    "Java 并发编程/线程池.md",
-    "Java 并发编程/总览.md",
-    "Java 并发编程/ThreadLocal.md",
-    "Java 并发编程/Thread.md",
-    "Java 并发编程/Synchronized.md",
-    "Java 并发编程/Java 内存模型.md",
-    "Spring Cloud/Fegin.md",
-    "1面试题/SpringCloud.md",
-    "1面试题/Spring.md",
-    "1面试题/Spring Boot.md",
+    "AWS 认证/Pasted image 20230525220527.png",
+    "Spring Cloud/PIP.md",
+    "Spring Cloud/Ribbon.md",
+    "git/未命名.md",
+    "git/git提交命令.md",
+    "AWS 认证/Pasted image 20230524170130.png",
+    "AWS 认证/Pasted image 20230524094603.png",
     "Mysql/Mysql 主从同步.md",
     "Mysql/Pasted image 20210829162914.png",
     "AWS 认证",
