@@ -59,7 +59,7 @@ MDL 不需要显示加上，在访问一张表的时候会自动加上，以保�
 
 ## 死锁与死锁检测
 当并发系统出现不同的线程循环资源依赖，线程彼此都在等待对方释放锁，就会形成死锁。
-![](https://tva1.sinaimg.cn/large/008i3skNgy1gtxol9d1f8j60vq0nsdgz02.jpg)
+![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-143225.jpg)
 
 防止死锁的策略：
 - 设置锁等待超时时间。通过 innodb_lock_wait_timeout 参数来设置， 默认 50s 

@@ -7,7 +7,7 @@ WAL 技术 Write-Ahead Logging ：写日志，再写磁盘。
 
 InnoDB 中的 redo log 是 **固定大小** ，从头开始写 写到末尾就回到开头循环写。
 
-![](https://tva1.sinaimg.cn/large/008i3skNgy1gt8ata3ls2j30vq0nsaaq.jpg)
+![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-142827.jpg)
 
 ### write pos 
 write pos 是当前记录的位置，往后移动。

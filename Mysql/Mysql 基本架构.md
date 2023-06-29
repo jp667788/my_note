@@ -12,7 +12,7 @@
 
 存储引擎层负责数据的存储和提取，Mysql 5.5.5 后默认为InnoDB 引擎。
 
-![](https://tva1.sinaimg.cn/large/008i3skNgy1gt87a7qcvaj31400u0whj.jpg)
+![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-142656.jpg)
 
 
 所有的存储引擎都共用同一个 Server 层

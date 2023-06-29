@@ -31,7 +31,7 @@ B+ 树索引模型
 >  ```
 >  表中 R1~R5 的 (ID,k) 值分别为 (100,1)、(200,2)、(300,3)、(500,5) 和 (600,6)，两棵树的示例示意图如下。
 >  
->  ![](https://tva1.sinaimg.cn/large/008i3skNgy1gt9dz5ar9ij30vq0nsdgz.jpg)
+>  ![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-143045.jpg)
 
 
 使用主键索引和非主键索引查询的区别：
@@ -51,7 +51,7 @@ B+ 树有两种类型的节点：
 	- 存储数据
 	
 	
-![](https://tva1.sinaimg.cn/large/008i3skNgy1gtwkyo0b5tj60fv08174g02.jpg)
+![](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-143109.jpg)
 
 ### 操作
 - 查找
@@ -103,10 +103,10 @@ B+树需要维护索引有序性，在插入新值时需要做必要的维护。
 索引下推可以在索引遍历的过程中，对索引中包含的字段优先做判断，从而过滤掉不满足条件的记录，减少回表的次数
 
 无索引下推流程
-![无索引下推流程](https://tva1.sinaimg.cn/large/008i3skNgy1gt9g3vinbrj30ru0ccjsj.jpg)
+![无索引下推流程](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-143141.jpg)
 
 索引下推流程
-![索引下推流程](https://tva1.sinaimg.cn/large/008i3skNgy1gt9g3059pzj30s80ie75l.jpg)
+![索引下推流程](https://mynoteimage.oss-cn-beijing.aliyuncs.com/2023-06-29-143159.jpg)
 
 
 ## 索引的优点

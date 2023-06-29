@@ -195,3 +195,98 @@ docker commit [选项] <容器ID或容器名> [<仓库名>[:<标签>]]
 
 # 使用 Dockerfile 构建镜像
 
+镜像的定制实际上就是定制每一层所添加的配置、文件。如果我们可以把每一层修改、安装、构建、操作的命令都写入一个脚本，用这个脚本来构建、定制镜像，那么之前提及的无法重复的问题、镜像构建透明性的问题、体积的问题就都会解决。这个脚本就是 **Dockerfile**。
+
+Dockerfile 是一个文本文件，其内包含了一条条的 **指令(Instruction)**，每一条指令构建一层，因此每一条指令的内容，就是描述该层应当如何构建
+
+
+以定制 `nginx` 镜像为例，这次我们使用 Dockerfile 来定制。
+
+在一个空白目录中，建立一个文本文件，并命名为 `Dockerfile`:
+``` shell
+$ mkdir mynginx
+$ cd mynginx
+$ touch Dockerfile
+```
+
+其内容为：
+``` shell
+FROM nginx
+RUN echo '<h1>Hello, Docker!</h1>' > /usr/share/nginx/html/index.html
+```
+
+## FROM 命令
+
+定制镜像是以一个镜像为基础，在其上进行定制。
+`FROM` 就是指定 **基础镜像**，因此一个 `Dockerfile` 中 `FROM` 是必备的指令，并且必须是第一条指令。
+
+> 在 [Docker Hub](https://hub.docker.com/search?q=&type=image&image_filter=official) 上有非常多的高质量的官方镜像，有可以直接拿来使用的服务类的镜像。scratch 是一个空白镜像。
+
+## RUN  命令
+
+`RUN` 指令是用来执行命令行命令的，是最常用的指令之一。其格式有两种：
+
+- ***shell*** 格式：`RUN <命令>`，就像直接在命令行中输入的命令一样。
+``` shell 
+RUN echo '<h1>Hello, Docker!</h1>' > /usr/share/nginx/html/index.html
+```
+
+- ***exec*** 格式：`RUN ["可执行文件", "参数1", "参数2"]`，这更像是函数调用中的格式。
+
+每一个 `RUN` 的行为，就和刚才我们手工建立镜像的过程一样：新建立一层，在其上执行这些命令，执行结束后，`commit` 这一层的修改，构成新的镜像。如果使用多行 RUN 命令执行多个命令，实质上就创建了7层镜像
+
+
+# 构建镜像
+
+- ***docker build*** 
+``` shell
+docker build [选项] <上下文路径/URL/->
+
+$ docker build -t nginx:v3 .
+```
+
+
+## 镜像构建上下文
+
+构建命令中的 `.` 为上下文路径。
+
+Docker 在运行时分为 Docker 引擎（也就是服务端守护进程）和客户端工具。Docker 的引擎提供了一组 REST API，被称为 [Docker Remote API](https://docs.docker.com/develop/sdk/)，而如 `docker` 命令这样的客户端工具，则是通过这组 API 与 Docker 引擎交互，从而完成各种功能。因此，虽然表面上我们好像是在本机执行各种 `docker` 功能，但实际上，一切都是使用的远程调用形式在服务端（Docker 引擎）完成。
+
+当我们进行镜像构建的时候，并非所有定制都会通过 `RUN` 指令完成，经常会需要将一些本地文件复制进镜像，比如通过 `COPY` 指令、`ADD` 指令等。而 `docker build` 命令构建镜像，其实并非在本地构建，而是在服务端，也就是 Docker 引擎中构建的。那么在这种客户端/服务端的架构中，如何才能让服务端获得本地文件呢？
+
+当构建的时候，用户会指定构建镜像上下文的路径，`docker build` 命令得知这个路径后，会将路径下的所有内容打包，然后上传给 Docker 引擎。
+
+
+``` shell
+COPY ./package.json /app/
+```
+
+这并不是要复制执行 `docker build` 命令所在的目录下的 `package.json`，也不是复制 `Dockerfile` 所在目录下的 `package.json`，而是复制 **上下文（context）** 目录下的 `package.json`。
+
+因此，`COPY` 这类指令中的源文件的路径都是 _相对路径_ 。
+
+## 其他 *docker build* 用法
+
+### 直接用 Git repo 进行构建
+
+``` shell
+$ docker build -t hello-world https://github.com/docker-library/hello-world.git#master:amd64/hello-world
+```
+
+### 用给定的 tar 压缩包构建
+
+``` shell
+$ docker build http://server/context.tar.gz
+```
+
+### 从标准输入中读取 Dockerfile 进行构建
+
+``` shell
+$ docker build - < Dockerfile
+```
+
+### 从标准输入中读取上下文压缩包进行构建
+
+``` shell
+$ docker build - < context.tar.gz
+```
